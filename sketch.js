@@ -1,9 +1,3 @@
-/*
-
-The Game Project 5 - Bring it all together
-
-*/
-
 var gameChar_x;
 var gameChar_y;
 var floorPos_y;
@@ -41,7 +35,6 @@ function setup()
 	isFalling = false;
 	isPlummeting = false;
 
-	// Initialise arrays of scenery objects
     trees_x = [600, 1000];
     clouds = [
         {x_pos: 180, y_pos: 320, size: 60},
@@ -62,22 +55,16 @@ function setup()
 
 function draw()
 {
-	background(100, 155, 255); // fill the sky blue
-
+	background(100, 155, 255);
 	noStroke();
 	fill(0,155,0);
-	rect(0, floorPos_y, width, height/4); // draw some green ground
+	rect(0, floorPos_y, width, height/4);
 
-	// Draw clouds.
+
     drawClouds();
-
-	// Draw mountains.
     drawMountains();
-
-	// Draw trees.
     drawTrees();
 
-	// Draw canyons.
     for(var i = 0; i < canyon.length; i++)
         {
             drawCanyon(canyon[i])
@@ -122,7 +109,7 @@ function draw()
 		}
 		else
 		{
-			scrollPos -= 5; // negative for moving against the background
+			scrollPos -= 5;
 		}
 	}
 
@@ -143,10 +130,6 @@ function draw()
     
 }
 
-
-// ---------------------
-// Key control functions
-// ---------------------
 
 function keyPressed(){
 
@@ -197,19 +180,12 @@ function keyReleased()
         }    
 }
 
-
-// ------------------------------
-// Game character render function
-// ------------------------------
-
-// Function to draw the game character.
-
 function drawGameChar()
 {
 	// draw game character
     if(isLeft && isFalling)
 	   {
-            // add your jumping-left code
+            //jumping-left
 
             //head
             noStroke();
@@ -244,7 +220,7 @@ function drawGameChar()
 	   }
 	else if(isRight && isFalling)
         {
-            // add your jumping-right code    
+            //jumping-right  
             //head
             noStroke();
             fill(255, 204, 123);
@@ -278,7 +254,7 @@ function drawGameChar()
         }
 	else if(isLeft)
         {
-            // add your walking left code
+            //walking left
 
             //head
             noStroke();
@@ -309,7 +285,7 @@ function drawGameChar()
         }
 	else if(isRight)
         {
-            // add your walking right code
+            //walking right
 
             //head
             noStroke();
@@ -341,7 +317,7 @@ function drawGameChar()
         }
 	else if(isFalling || isPlummeting)
         {
-            // add your jumping facing forwards code
+            //jumping facing forwards
             
             noStroke();
             fill(255, 204, 123);
@@ -378,7 +354,7 @@ function drawGameChar()
         }
 	else
         {
-            // add your standing front facing code
+            //standing front facing
 
             //head
             noStroke();
@@ -416,11 +392,6 @@ function drawGameChar()
         }    
 }
 
-// ---------------------------
-// Background render functions
-// ---------------------------
-
-// Function to draw cloud objects.
 function drawClouds()
 {
     push();
@@ -437,7 +408,6 @@ function drawClouds()
     pop();
 }
 
-// Function to draw mountains objects.
 function drawMountains()
 {
     push();
@@ -482,7 +452,6 @@ function drawMountains()
     pop();
 }
 
-// Function to draw trees objects.
 function drawTrees()
 {
     push();
@@ -506,13 +475,6 @@ function drawTrees()
     pop();
 }
 
-
-// ---------------------------------
-// Canyon render and check functions
-// ---------------------------------
-
-// Function to draw canyon objects.
-
 function drawCanyon(t_canyon)
 {
     push();
@@ -529,8 +491,6 @@ function drawCanyon(t_canyon)
              t_canyon.x_pos + 90, 576); 
     pop();
 }
-
-// Function to check character is over a canyon.
 
 function checkCanyon(t_canyon)
 {
@@ -556,12 +516,6 @@ function checkCanyon(t_canyon)
         }
 }
 
-// ----------------------------------
-// Collectable items render and check functions
-// ----------------------------------
-
-// Function to draw collectable objects.
-
 function drawCollectable(t_collectable)
 {
     push();
@@ -586,8 +540,6 @@ function drawCollectable(t_collectable)
     
 
 }
-
-// Function to check character has collected an item.
 
 function checkCollectable(t_collectable)
 {
