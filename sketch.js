@@ -516,6 +516,42 @@ function checkCanyon(t_canyon)
         }
 }
 
+function renderFlagpole()
+{
+    push();
+    translate(scrollPos, 0);
+    strokeWeight(5);
+    stroke(100);
+    line(flagpole.x_pos, floorPos_y, flagpole.x_pos, floorPos_y - 250);
+    noStroke();
+    
+    if(flagpole.isReached)
+        {
+            fill(255, 0, 255);
+            rect(flagpole.x_pos, floorPos_y - 250, 50, 50);
+        }
+    else
+        {
+            fill(255, 0, 255);
+            rect(flagpole.x_pos, floorPos_y - 50, 50, 50);
+        } 
+
+    pop();
+}
+
+function checkFlagpole()
+{
+    var d = abs(gameChar_world_x - flagpole.x_pos);
+    
+     //console.log(d);
+    
+    if(d < 15)
+        {
+            flagpole.isReached = true;
+        }
+}
+
+
 function drawCollectable(t_collectable)
 {
     push();
