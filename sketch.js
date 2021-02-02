@@ -1,3 +1,9 @@
+/*
+
+The Game Project 5 - Bring it all together
+
+*/
+
 var gameChar_x;
 var gameChar_y;
 var floorPos_y;
@@ -15,56 +21,38 @@ var mountains
 var collectables
 var canyon
 
+var game_score;
+var flagpole;
+
+var lives
+
 function setup()
 {
 	createCanvas(1024, 576);
 	floorPos_y = height * 3/4;
-	gameChar_x = width/2;
-	gameChar_y = floorPos_y;
-
-	// Variable to control the background scrolling.
-	scrollPos = 0;
-
-	// Variable to store the real position of the gameChar in the game
-	// world. Needed for collision detection.
-	gameChar_world_x = gameChar_x - scrollPos;
-
-	// Boolean variables to control the movement of the game character.
-	isLeft = false;
-	isRight = false;
-	isFalling = false;
-	isPlummeting = false;
-
-    trees_x = [600, 1000];
-    clouds = [
-        {x_pos: 180, y_pos: 320, size: 60},
-        {x_pos: 680, y_pos: 220, size: 60},      
-        {x_pos: 880, y_pos: 320, size: 60}
-    ];
-    mountains = [{x_pos: 50, y_pos: 432, size: 50}];
-    collectables = [
-        {x_pos: 20, y_pos: floorPos_y, size: 100, isFound: false},
-        {x_pos: 320, y_pos: floorPos_y, size: 100, isFound: false},
-        //{x_pos: 620, y_pos: floorPos_y, size: 100, isFound: false},
-        {x_pos: 920, y_pos: floorPos_y, size: 100, isFound: false}
-    ];
-    canyon = [{x_pos: 80, width: 40}];
-    
-    
+    lives = 3;
+    startGame();
 }
 
 function draw()
 {
-	background(100, 155, 255);
+	background(100, 155, 255); // fill the sky blue
+
 	noStroke();
 	fill(0,155,0);
-	rect(0, floorPos_y, width, height/4);
-
-
+	rect(0, floorPos_y, width, height/4); // draw some green ground
+    
+   
+	// Draw clouds.
     drawClouds();
+
+	// Draw mountains.
     drawMountains();
+
+	// Draw trees.
     drawTrees();
 
+	// Draw canyons.
     for(var i = 0; i < canyon.length; i++)
         {
             drawCanyon(canyon[i])
@@ -77,17 +65,35 @@ function draw()
 	// Draw collectable items.
     for(var i = 0; i < collectables.length; i++)
         {
-            if(collectables[i].isFound == false)
+            if(!collectables[i].isFound)
                 {
                     drawCollectable(collectables[i])
-                }
-            checkCollectable(collectables[i])
+                    checkCollectable(collectables[i])
+                } 
         }
-
+    
+    renderFlagpole();
+    
     
 	// Draw game character.
 	drawGameChar();
-
+    textAlign(CENTER);
+    fill(0);
+    noStroke();
+    textSize(30);
+    text("score: " + game_score, width / 2, 30);
+    text("lives: " + lives, width / 2, 60);
+    
+    if(lives < 1)
+        {
+            text("Game over. Press space to continue.", width / 2, height / 2);
+            return;
+        }
+    if(flagpole.isReached)
+        {
+            text("Level Complete. You scored: " + game_score, width / 2, height / 2);
+            return;
+        }
 	// Logic to make the game character move or the background scroll.
 	if(isLeft)
 	{
@@ -109,7 +115,7 @@ function draw()
 		}
 		else
 		{
-			scrollPos -= 5;
+			scrollPos -= 5; // negative for moving against the background
 		}
 	}
 
@@ -123,34 +129,48 @@ function draw()
         else
             {
                 isFalling = false;
-            }    
+            }
+    
+    if(flagpole.isReached == false)
+        {
+            checkFlagpole();
+        }
+    
+    checkPLayerDie();
+
 
 	// Update real position of gameChar for collision detection.
 	gameChar_world_x = gameChar_x - scrollPos;
     
+
+    
 }
 
 
+// ---------------------
+// Key control functions
+// ---------------------
+
 function keyPressed(){
 
-	console.log("press" + keyCode);
-	console.log("press" + key);
+	//console.log("press" + keyCode);
+	//console.log("press" + key);
 
     if(keyCode == 37)
         {
-            console.log("left arrow");
+            //console.log("left arrow");
             isLeft = true;
         }
     
     else if(keyCode == 39)
         {
-            console.log("right arrow");
+            //console.log("right arrow");
             isRight = true;
         }
     
     if(keyCode == 32)
         {
-            console.log("space bar");
+            //console.log("space bar");
             isFalling = true;
         }
     
@@ -164,8 +184,8 @@ function keyPressed(){
 function keyReleased()
 {
 
-	console.log("release" + keyCode);
-	console.log("release" + key);
+	//console.log("release" + keyCode);
+	//console.log("release" + key);
 
     if(keyCode == 37)
         {
@@ -180,12 +200,19 @@ function keyReleased()
         }    
 }
 
+
+// ------------------------------
+// Game character render function
+// ------------------------------
+
+// Function to draw the game character.
+
 function drawGameChar()
 {
 	// draw game character
     if(isLeft && isFalling)
 	   {
-            //jumping-left
+            // add your jumping-left code
 
             //head
             noStroke();
@@ -220,7 +247,7 @@ function drawGameChar()
 	   }
 	else if(isRight && isFalling)
         {
-            //jumping-right  
+            // add your jumping-right code    
             //head
             noStroke();
             fill(255, 204, 123);
@@ -254,7 +281,7 @@ function drawGameChar()
         }
 	else if(isLeft)
         {
-            //walking left
+            // add your walking left code
 
             //head
             noStroke();
@@ -285,7 +312,7 @@ function drawGameChar()
         }
 	else if(isRight)
         {
-            //walking right
+            // add your walking right code
 
             //head
             noStroke();
@@ -317,7 +344,7 @@ function drawGameChar()
         }
 	else if(isFalling || isPlummeting)
         {
-            //jumping facing forwards
+            // add your jumping facing forwards code
             
             noStroke();
             fill(255, 204, 123);
@@ -354,7 +381,7 @@ function drawGameChar()
         }
 	else
         {
-            //standing front facing
+            // add your standing front facing code
 
             //head
             noStroke();
@@ -392,6 +419,11 @@ function drawGameChar()
         }    
 }
 
+// ---------------------------
+// Background render functions
+// ---------------------------
+
+// Function to draw cloud objects.
 function drawClouds()
 {
     push();
@@ -408,6 +440,7 @@ function drawClouds()
     pop();
 }
 
+// Function to draw mountains objects.
 function drawMountains()
 {
     push();
@@ -452,6 +485,7 @@ function drawMountains()
     pop();
 }
 
+// Function to draw trees objects.
 function drawTrees()
 {
     push();
@@ -475,6 +509,13 @@ function drawTrees()
     pop();
 }
 
+
+// ---------------------------------
+// Canyon render and check functions
+// ---------------------------------
+
+// Function to draw canyon objects.
+
 function drawCanyon(t_canyon)
 {
     push();
@@ -492,10 +533,12 @@ function drawCanyon(t_canyon)
     pop();
 }
 
+// Function to check character is over a canyon.
+
 function checkCanyon(t_canyon)
 {
     
-    console.log(t_canyon.x_pos, gameChar_world_x);
+    //console.log(t_canyon.x_pos, gameChar_world_x);
     if(gameChar_y < floorPos_y)
         {
             gameChar_y += 2.5;
@@ -551,6 +594,74 @@ function checkFlagpole()
         }
 }
 
+function checkPLayerDie()
+{
+
+    console.log(lives);
+    if(isPlummeting && lives > 0)
+        {
+            lives -= 1;
+            startGame();
+        } 
+}
+
+function startGame()
+{
+    gameChar_x = width/2;
+	gameChar_y = floorPos_y;
+
+	// Variable to control the background scrolling.
+	scrollPos = 0;
+
+	// Variable to store the real position of the gameChar in the game
+	// world. Needed for collision detection.
+	gameChar_world_x = gameChar_x - scrollPos;
+
+	// Boolean variables to control the movement of the game character.
+	isLeft = false;
+	isRight = false;
+	isFalling = false;
+	isPlummeting = false;
+
+	// Initialise arrays of scenery objects
+    trees_x = [600, 1000, 1500, 2300];
+    clouds = [
+        {x_pos: 180, y_pos: 320, size: 60},
+        {x_pos: 680, y_pos: 220, size: 60},      
+        {x_pos: 880, y_pos: 320, size: 60},
+        {x_pos: 1280, y_pos: 320, size: 60},
+        {x_pos: 1880, y_pos: 320, size: 100},
+        {x_pos: 2880, y_pos: 320, size: 80}
+    ];
+    mountains = [
+        {x_pos: 50, y_pos: 432, size: 50},
+        {x_pos: 1100, y_pos: 432, size: 40},
+        {x_pos: 2300, y_pos: 432, size: 50},
+    ];
+    collectables = [
+        {x_pos: 20, y_pos: floorPos_y, size: 100, isFound: false},
+        {x_pos: 320, y_pos: floorPos_y, size: 100, isFound: false},
+        //{x_pos: 620, y_pos: floorPos_y, size: 100, isFound: false},
+        {x_pos: 920, y_pos: floorPos_y, size: 100, isFound: false}
+    ];
+    canyon = [
+        {x_pos: 80, width: 40},
+        {x_pos: 1880, width: 40}
+    ];
+
+    
+    game_score = 0;
+    
+    flagpole = {isReached: false, x_pos: 3100};
+    
+}
+
+
+// ----------------------------------
+// Collectable items render and check functions
+// ----------------------------------
+
+// Function to draw collectable objects.
 
 function drawCollectable(t_collectable)
 {
@@ -577,11 +688,14 @@ function drawCollectable(t_collectable)
 
 }
 
+// Function to check character has collected an item.
+
 function checkCollectable(t_collectable)
 {
     if(dist(gameChar_world_x, gameChar_y, t_collectable.x_pos, t_collectable.y_pos) < 20)
         {
             t_collectable.isFound = true;
+            game_score += 1;
         }
     
     
